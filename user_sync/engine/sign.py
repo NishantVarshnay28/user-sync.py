@@ -101,11 +101,13 @@ class SignSyncEngine:
             # Create any new Sign groups
             org_directory_groups = self._groupify(
                 org_name, directory_groups.values())
+            created_groups = []
             for directory_group in org_directory_groups:
-                if (directory_group.lower() not in self.sign_groups[org_name]):
+                if (directory_group.lower() not in self.sign_groups[org_name] and directory_group.lower() not in created_groups):
                     self.logger.info(
                         "{}Creating new Sign group: {}".format(self.org_string(org_name), directory_group))
                     sign_connector.create_group(DetailedGroupInfo(name=directory_group))
+                    created_groups.append(directory_group)
             self.sign_groups[org_name] = self.get_groups(org_name)
             # Update user details or insert new user
             self.update_sign_users(
